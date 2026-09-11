@@ -1,6 +1,6 @@
 # archplot
 
-[English](README.md) | [简体中文](README.zh-CN.md) | 日本語
+[English](README.md) | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | 日本語
 
 アーキテクチャ図をコードで描くための Claude Code skill です。ノード・境界・エッジを**座標を明示
 して**宣言する小さな Python ジェネレーターを書き、それを実行して `.drawio` を生成し、headless

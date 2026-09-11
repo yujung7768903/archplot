@@ -11,36 +11,6 @@ description: 아키텍처·구성도·다이어그램을 그릴 때 쓴다. draw
 
 ## 절차
 
-### 0. 산출물 형식을 먼저 정한다
-
-**요청에 형식이 적혀 있지 않으면 그리기 전에 `AskUserQuestion` 으로 묻는다.** 산문으로 되묻지 않는다 — 선택지가 고정되어야 답이 갈리지 않는다.
-
-```
-AskUserQuestion(questions=[{
-  "question": "산출물을 어떤 형식으로 남길까?",
-  "header": "산출물",
-  "multiSelect": false,
-  "options": [
-    {"label": ".drawio 만",
-     "description": "편집 가능한 원본만 남긴다. draw.io 앱에서 열어 고칠 수 있다. 문서에 붙일 이미지가 필요 없을 때."},
-    {"label": ".drawio + PNG",
-     "description": "원본과 렌더 이미지를 같이 남긴다. Confluence·Jira·README 에 붙이거나 바로 보여줄 때."}
-  ]}])
-```
-
-묻지 않는 경우 — 이때는 바로 진행한다.
-
-| 상황 | 형식 |
-| --- | --- |
-| 요청에 `png`·`이미지`·`문서에 붙일`·`첨부`·`보여줘` 가 있다 | `.drawio` + PNG |
-| 요청에 `drawio`·`원본`·`편집할` 이 있다 | `.drawio` 만 |
-| 발행(Confluence)까지 요청받았다 | `.drawio` + PNG |
-| 대화형이 아니라 물을 수 없다 | `.drawio` + PNG (기본값) |
-
-**PNG 렌더 자체는 형식과 무관하게 항상 한다.** 렌더는 산출물이기 전에 검수 수단이다 — 겹침·관통·잘림은 렌더해서 눈으로 보는 것 말고 확인할 방법이 없다. `.drawio` 만 남기기로 했으면 4·4-1 검수를 마친 뒤 PNG 를 지운다.
-
-### 작업 순서
-
 | 단계 | 명령 | 확인 |
 | --- | --- | --- |
 | 1. 생성기 작성 | `<이름>.py` 에 노드·엣지를 좌표와 함께 선언 | — |
@@ -48,8 +18,7 @@ AskUserQuestion(questions=[{
 | 3. PNG 렌더 | `python3 ~/.claude/skills/archplot/scripts/drawio_render.py <이름>.drawio` | 캔버스 크기 출력 |
 | 4. 눈으로 확인 | Read 툴로 PNG 를 연다 | 겹침·잘림·꼬임은 실행 성공만으로 안 드러난다 |
 | 4-1. 확대 확인 | `python3 ~/.claude/skills/archplot/scripts/drawio_crop.py <이름>.png <x> <y> <w> <h> --zoom 2` | **전체 1장으로 끝내지 않는다.** 축소하면 1.2px 선이 글자 획으로 보여 라벨 관통이 안 드러난다. 그룹 박스 좌상단(라벨)과 긴 캡션 주변을 개별로 확대한다 |
-| 5. 형식 정리 | `.drawio` 만 남기기로 했으면 `rm <이름>.png` | 검수를 마친 **뒤에** 지운다 |
-| 6. 발행 (요청받았을 때만) | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <이름>.png --page <id>` | `md5 일치` 출력 |
+| 5. 발행 (요청받았을 때만) | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <이름>.png --page <id>` | `md5 일치` 출력 |
 
 어긋나면 생성기의 좌표를 고쳐 2번부터 다시 돈다. PNG 도 `.drawio` 도 손으로 편집하지 않는다 — 정본은 생성기 하나다.
 

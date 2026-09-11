@@ -1,6 +1,6 @@
 # archplot
 
-[English](README.md) | 简体中文 | [日本語](README.ja.md)
+[English](README.md) | [한국어](README.ko.md) | 简体中文 | [日本語](README.ja.md)
 
 一个用代码绘制架构图的 Claude Code skill。你写一个简短的 Python 生成器，**用显式坐标**声明节点、
 边界和连线，运行它生成 `.drawio` 文件，再用 headless Chromium 加内置的 draw.io viewer 渲染出

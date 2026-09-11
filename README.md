@@ -1,6 +1,6 @@
 # archplot
 
-English | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+English | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
 A Claude Code skill for drawing architecture diagrams as code. You write a small Python
 generator that declares nodes, boundaries and edges **at explicit coordinates**, run it to
