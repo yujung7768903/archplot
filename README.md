@@ -265,6 +265,7 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | Boundary or caption clipped at the image edge | Not enough canvas padding | Raise the `PAD` constant in `drawio_render.py` |
 | Renders, but the icons are missing | AWS4 stencils are fetched from a CDN | Check network access |
 | The Confluence attachment version does not increase | Same filename re-posted to `POST /child/attachment` | Use `confluence_publish.py` |
+| `ValueError: the generated XML is malformed` | A label or style contains a character that breaks an XML attribute. `save()` parses the document before writing and refuses to emit it | Find the character in the surrounding context the error prints. Quotes in labels are handled for you, so this usually means raw XML was appended to `_cells` directly |
 
 ## Choosing a diagram tool
 

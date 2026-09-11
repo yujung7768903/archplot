@@ -253,6 +253,7 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | 경계나 캡션이 이미지 가장자리에서 잘림 | 캔버스 여백 부족 | `drawio_render.py` 의 `PAD` 상수를 올린다 |
 | 렌더는 되는데 아이콘이 없음 | AWS4 스텐실을 CDN 에서 가져온다 | 네트워크 접근을 확인한다 |
 | Confluence 첨부 버전이 올라가지 않음 | 같은 파일명을 `POST /child/attachment` 로 다시 올렸다 | `confluence_publish.py` 를 쓴다 |
+| `ValueError: 생성한 XML 이 깨졌다` | 라벨이나 스타일에 XML 속성을 깨는 문자가 들어갔다. `save()` 가 쓰기 전에 파싱해 내보내지 않는다 | 에러가 출력하는 앞뒤 문맥에서 문제 문자를 찾는다. 라벨의 따옴표는 자동으로 처리되므로, 대개 `_cells` 에 원시 XML 을 직접 넣은 경우다 |
 
 ## 다이어그램 도구 고르기
 

@@ -258,6 +258,7 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | 境界やキャプションが画像の端で切れる | キャンバスの余白が足りない | `drawio_render.py` の `PAD` 定数を上げます |
 | レンダリングはできるがアイコンが出ない | AWS4 ステンシルを CDN から取得している | ネットワークを確認します |
 | Confluence の添付バージョンが上がらない | 同じファイル名で `POST /child/attachment` を再送した | `confluence_publish.py` を使います |
+| `ValueError: 生成した XML が壊れている` | ラベルやスタイルに XML 属性を断ち切る文字が含まれている。`save()` は書き出す前に解析し、出力を拒否します | エラーが表示する前後の文脈から該当文字を探します。ラベル内の引用符は自動処理されるため、多くは `_cells` に生の XML を直接追加した場合です |
 
 ## 作図ツールの選び分け
 

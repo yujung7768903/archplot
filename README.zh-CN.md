@@ -246,6 +246,7 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | 边界或说明文字在图片边缘被切掉 | 画布留白不足 | 调大 `drawio_render.py` 里的 `PAD` 常量 |
 | 渲染成功但图标不出现 | AWS4 模板从 CDN 获取 | 检查网络连通性 |
 | Confluence 附件版本不递增 | 同一文件名重复 `POST /child/attachment` | 使用 `confluence_publish.py` |
+| `ValueError: 生成的 XML 已损坏` | 标签或样式中含有会截断 XML 属性的字符。`save()` 在写入前先解析，拒绝输出 | 在错误打印的上下文中找到该字符。标签中的引号已自动处理，因此通常是直接向 `_cells` 追加了原始 XML |
 
 ## 如何选择作图工具
 
