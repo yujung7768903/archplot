@@ -283,6 +283,11 @@ draw.io / diagrams.net、mxGraph、AWS、Google Cloud、Azure、Kubernetes そ�
 `https://github.com/jgraph/drawio/blob/v31.3.1/src/main/webapp/js/viewer-static.min.js`。
 SHA256 により上流のタグ付きファイルとバイト単位で一致することを確認済みです。
 
+**生成した図の責任は利用者にあります。** ベンダーごとにアイコンの条件は異なり、上流の
+`diagrams` パッケージも同梱するアイコン素材のライセンスを公開していません。ベンダーアイコンを
+含む図を公開する前に、各ベンダーの実際の記載をまとめた [THIRD-PARTY.md](THIRD-PARTY.md) を
+確認してください。
+
 **アイコンは再配布しません。** 本リポジトリはベンダーのアイコンファイルを含みません。実行時に
 インストール済みの `diagrams` パッケージから読み込みます。ベンダーアイコンを本リポジトリに
 コミットしたり、本リポジトリから再配布したりしないでください。

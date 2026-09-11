@@ -269,6 +269,10 @@ draw.io / diagrams.net、mxGraph、AWS、Google Cloud、Azure、Kubernetes 以�
 `https://github.com/jgraph/drawio/blob/v31.3.1/src/main/webapp/js/viewer-static.min.js`，
 已用 SHA256 校验与上游 tag 文件逐字节一致。
 
+**你生成的图表由你自己负责。** 各厂商的图标条款并不一致，上游 `diagrams` 包也没有为其打包的
+图标素材公布许可。发布包含厂商图标的图表前，请查阅 [THIRD-PARTY.md](THIRD-PARTY.md)，
+其中记录了各厂商实际声明的内容。
+
 **不再分发图标。** 本仓库不包含任何厂商图标文件；图标在运行时从已安装的 `diagrams` 包读取。
 请不要把厂商图标提交到本仓库，也不要从本仓库再分发它们。
 

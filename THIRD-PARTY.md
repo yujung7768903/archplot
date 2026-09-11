@@ -18,22 +18,59 @@ closed network some draw.io shapes render as empty boxes.
 
 ## Not included — resolved at runtime
 
-### Vendor icons — the `diagrams` package
+### Vendor icons
 
-This repository contains **no vendor icon files**. `scripts/drawio_build.py` reads icon PNGs
-from the [`diagrams`](https://github.com/mingrammer/diagrams) package that you install
-yourself (`pip install diagrams`), and embeds them into the generated `.drawio` as base64
-data URIs. Icons therefore appear only in the diagram output you create, never in this
-repository's distribution.
+This repository contains **no vendor icon files**.
 
-The `diagrams` package itself is MIT licensed. The icon artwork it bundles belongs to the
-respective vendors — Amazon Web Services, Microsoft, Google, the Cloud Native Computing
-Foundation and others — and is used under each vendor's own terms.
+At runtime, this skill reads icon images from the `diagrams` package
+(https://github.com/mingrammer/diagrams) installed in the user's own Python
+environment, and embeds them as base64 data URIs inside the `.drawio` files it
+generates. Icons therefore appear only in diagrams produced by the end user, on
+the end user's machine.
 
-When you create diagrams with this skill:
+The `diagrams` package is licensed under the MIT License
+(Copyright (c) 2020 MinJae Kwon). **That MIT license covers the package's code.
+It does not grant any rights in the vendor icon artwork bundled with it.** As of
+2026-09-11 the upstream project has not published a license notice for the icon
+assets; the question has been open as issue #250 since 2020 with no maintainer
+response.
 
-- Do not change an icon's aspect ratio or its colors.
-- Do not commit vendor icon files to this repository, and do not redistribute them from it.
+Each vendor's own terms apply to its icons:
+
+| Icons | Rights holder | Terms |
+|---|---|---|
+| AWS Architecture Icons | Amazon Web Services, Inc. | https://aws.amazon.com/architecture/icons/ |
+| Azure architecture icons | Microsoft Corporation | https://learn.microsoft.com/en-us/azure/architecture/icons/ |
+| Google Cloud product icons | Google LLC | https://cloud.google.com/icons |
+| Kubernetes and other CNCF project logos | The Linux Foundation / CNCF | https://www.linuxfoundation.org/legal/trademark-usage |
+| Other icon sets bundled by `diagrams` | respective owners | see each vendor |
+
+Summary of what those terms say, as published at the time of writing:
+
+- **AWS** permits customers and partners to use its icons and toolkits to create
+  architecture diagrams, including via preexisting icon libraries in third-party
+  tools. AWS does not publish a redistribution license for the icon files
+  themselves.
+- **Microsoft** permits use of the Azure icons "in architectural diagrams,
+  training materials, or documentation" and permits copying, distributing and
+  displaying them for that permitted use. Icons must not be cropped, flipped,
+  rotated, distorted, or otherwise changed in shape, and must not be used to
+  represent your own product or service.
+- **Google** publishes no usage terms on its icon library page. Use of the Google
+  Cloud icons is neither granted nor prohibited there; Google's trademark rules
+  apply.
+- **CNCF / Linux Foundation** artwork is made available under the Linux
+  Foundation trademark usage guidelines, not under a copyright license. Logos
+  must not be altered, recolored, combined with other marks, or overlaid, and
+  written permission is required to use them in materials promoting your own
+  products or services.
+
+This project renders icons unmodified and at a fixed aspect ratio. Do not alter
+icon colors or shapes when extending it.
+
+**You are responsible for how you use the diagrams you generate.** Publishing a
+diagram that contains vendor icons is your act, not this project's; check the
+terms above against your intended use.
 
 ### Chromium
 

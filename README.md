@@ -290,6 +290,11 @@ viewer v31.3.1, licensed under the Apache License 2.0. Source:
 `https://github.com/jgraph/drawio/blob/v31.3.1/src/main/webapp/js/viewer-static.min.js`,
 verified byte-identical to the upstream tagged file by SHA256.
 
+**Your diagrams are your responsibility.** Vendor icon terms differ, and the upstream
+`diagrams` package does not publish a license for the icon artwork it bundles. Before you
+publish a diagram containing vendor icons, check [THIRD-PARTY.md](THIRD-PARTY.md), which
+records what each vendor actually states.
+
 **Icons are not redistributed.** This repository contains no vendor icon files; they are
 read at runtime from the installed `diagrams` package. Do not commit vendor icons to this
 repository or redistribute them from it.
