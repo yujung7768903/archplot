@@ -1,0 +1,14 @@
+archplot
+Copyright 2026 yujung7768903
+
+This product includes software developed by draw.io (JGraph Ltd, draw.io AG).
+
+  vendor/viewer-static.min.js
+  draw.io viewer, version 31.3.1, redistributed unmodified.
+  Source: https://github.com/jgraph/drawio/blob/v31.3.1/src/main/webapp/js/viewer-static.min.js
+  Licensed under the Apache License, Version 2.0.
+  A copy of that license is at vendor/LICENSE-drawio.txt.
+
+archplot is not affiliated with, endorsed by, or sponsored by draw.io Ltd,
+draw.io AG, or JGraph Ltd. "draw.io" and "diagrams.net" are trademarks of
+their respective owners.
