@@ -19,14 +19,41 @@
 import base64
 import glob
 import os
+import xml.etree.ElementTree as ET
 import xml.sax.saxutils as su
 
 
-def _lbl(s):
-    """라벨의 줄바꿈을 XML 문자 참조로 바꾼다 — 속성값의 생 개행은
-    XML 파서가 공백으로 정규화해 버린다."""
-    return su.escape(s).replace("\n", "&#10;")
+# 라벨은 전부 XML 속성값(value="...") 자리에 들어간다. saxutils.escape 는 & < > 만
+# 바꾸고 따옴표는 그냥 두므로, 라벨에 " 가 하나 있으면 속성이 거기서 끝나 버린다.
+# 그러면 파일은 정상적으로 써지고 생성기도 성공으로 끝나는데, viewer 가 그 지점부터
+# 뒤쪽 셀을 통째로 버려 PNG 에서 노드가 조용히 사라진다. 두 따옴표를 다 바꾼다.
+_ATTR_ESCAPE = {'"': "&quot;", "'": "&apos;"}
 
+
+def _lbl(s):
+    """라벨을 XML 속성값으로 안전하게 바꾼다.
+
+    줄바꿈도 문자 참조로 바꾼다 — 속성값의 생 개행은 XML 파서가 공백으로 정규화해 버린다.
+    """
+    return su.escape(s, _ATTR_ESCAPE).replace("\n", "&#10;")
+
+
+
+def _assert_wellformed(xml):
+    """깨진 XML 을 파일로 내보내지 않는다.
+
+    draw.io viewer 는 파싱이 깨진 지점부터 뒤쪽 셀을 조용히 버린다. 캔버스 크기는
+    정규식으로 재서 정상으로 나오기 때문에, 렌더된 PNG 만 보면 노드가 사라진 걸
+    알아채기 어렵다. 그래서 쓰기 전에 막는다.
+    """
+    try:
+        ET.fromstring(xml)
+    except ET.ParseError as e:
+        col = e.position[1]
+        near = xml[max(0, col - 120):col + 40]
+        raise ValueError(
+            f"생성한 XML 이 깨졌다 ({e}). 라벨에 XML 속성을 깨는 문자가 들어갔을 수 있다.\n"
+            f"문제 지점 앞뒤: ...{near}...") from None
 
 # `diagrams` 패키지의 아이콘 리소스. 경로가 파이썬 버전에 묶이므로 glob 로 찾는다.
 _ICON_ROOTS = sorted(glob.glob(os.path.expanduser(
@@ -140,7 +167,7 @@ class Diagram:
 
     def xml(self):
         return ('<mxfile host="app.diagrams.net">'
-                f'<diagram name="{su.escape(self.name)}">'
+                f'<diagram name="{_lbl(self.name)}">'
                 '<mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" page="0" '
                 'math="0" shadow="0"><root>'
                 '<mxCell id="0"/><mxCell id="1" parent="0"/>'
@@ -148,8 +175,10 @@ class Diagram:
                 "</root></mxGraphModel></diagram></mxfile>")
 
     def save(self, path):
+        xml = self.xml()
+        _assert_wellformed(xml)
         with open(path, "w", encoding="utf-8") as f:
-            f.write(self.xml())
+            f.write(xml)
         print(f"{path}  ({len(self._groups)} 경계, {len(self._cells)} 셀)")
         return path
 
@@ -167,6 +196,23 @@ def _demo():
     assert "grIcon=mxgraph.aws4.group_account" in x
     assert "exitX=1;exitY=0.5;" in x
     assert find_icon("lambda"), "아이콘 검색이 비었다 — diagrams 리소스 경로 확인"
+
+    # 라벨의 따옴표가 속성을 깨지 않는지. 깨지면 viewer 가 뒤쪽 셀을 조용히 버린다.
+    q = Diagram('제목 "인용"')
+    q.node("a", '따옴표 "여기" 포함', 40, 40, icon("aws/compute/ec2"))
+    q.node("b", "뒤 노드", 240, 40, icon("aws/compute/ec2"))
+    got = [c.get("value") for c in ET.fromstring(q.xml()).iter("mxCell") if c.get("value")]
+    assert got == ['따옴표 "여기" 포함', "뒤 노드"], got
+
+    # 깨진 XML 은 파일로 내보내지 않는다
+    bad = Diagram("t")
+    bad._cells.append('<mxCell id="x" value="x" style="a="b"" vertex="1" parent="1"/>')
+    try:
+        bad.xml() and _assert_wellformed(bad.xml())
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("깨진 XML 을 통과시켰다")
     print("demo OK")
 
 
