@@ -27,7 +27,6 @@ PNG —— 不需要 draw.io Desktop，不需要 `xvfb`，不需要 `sudo`。
   应用。之所以这样实现，是因为 draw.io Desktop CLI 的 export 模式在 WSL 下会卡住。
 - **面向 agent 的作图规则** —— `SKILL.md` 中的规则集来自对四张 AWS 参考架构图的比对，让 agent
   按规则作图而不是临场发挥。
-- **可选的 Confluence 发布** —— 把渲染出的 PNG 附加到页面，并用 md5 校验。
 
 ## 快速开始
 
@@ -38,7 +37,6 @@ PNG —— 不需要 draw.io Desktop，不需要 `xvfb`，不需要 `sudo`。
 | Python 3 | 仅用标准库，无额外运行时依赖 |
 | `pip install diagrams` | 提供生成器读取的厂商图标 PNG |
 | Chromium | 自动探测 `~/.cache/ms-playwright` 或 `~/.cache/puppeteer`，否则回退到系统的 `chromium` / `chromium-browser` / `google-chrome` |
-| 发布到 Confluence（可选） | 需要环境变量 `CONFLUENCE_SITE`、`CONFLUENCE_EMAIL`、`CONFLUENCE_API_TOKEN` |
 
 ### 安装
 
@@ -67,7 +65,6 @@ python3 scripts/drawio_route.py    # drawio_route: ok
 | 3. 渲染 PNG | `python3 ~/.claude/skills/archplot/scripts/drawio_render.py <name>.drawio` | 打印画布尺寸 |
 | 4. 亲眼看 PNG | 打开图片 | 重叠、裁切、连线打结不会体现在退出码里 |
 | 4-1. 放大查看 | `python3 ~/.claude/skills/archplot/scripts/drawio_crop.py <name>.png <x> <y> <w> <h> --zoom 2` | 只看整张不够 —— 缩小之后 1.2px 的线看起来像笔画的一部分，穿过标签的线根本看不出来。把每个组框的左上角（标签所在处）和长说明文字周围逐处放大 |
-| 5. 发布（可选） | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <name>.png --page <id>` | 打印 md5 一致 |
 
 ## 编写生成器
 
@@ -214,26 +211,8 @@ from drawio_build import find_icon; print(find_icon('mediaconvert'))"
 | `scripts/drawio_route.py` | 连线走线。`Panel`、`beside()`。计算连接点、正交路径与遮挡判定。自检：`python3 drawio_route.py` |
 | `scripts/drawio_render.py` | 用 headless Chromium 与 `vendor/viewer-static.min.js` 把 `.drawio` 转成 PNG。`--scale` 默认为 2 |
 | `scripts/drawio_crop.py` | 放大渲染后 PNG 的局部，用于检查标签被穿过的情况。使用与渲染器相同的 headless Chromium —— 不需要 PIL，也不需要 ImageMagick |
-| `scripts/confluence_publish.py` | 把 PNG 附加到页面，或新建页面；用 md5 校验 |
 | `vendor/viewer-static.min.js` | 随仓库内置的 draw.io viewer，因此不需要桌面应用，也不需要 `xvfb` |
-| `reference/*.png` | 作图规则所依据的四张参考图 |
-
-### 发布到 Confluence
-
-可选，且完全通过环境变量配置 —— `CONFLUENCE_SITE`、`CONFLUENCE_EMAIL`、
-`CONFLUENCE_API_TOKEN`。
-
-```bash
-# refresh the attachment on an existing page (the page body is left alone)
-python3 scripts/confluence_publish.py out.png --page <page-id>
-
-# create a page under a parent and attach
-python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --title "Title"
-```
-
-> [!IMPORTANT]
-> 用同一个文件名再次 `POST /child/attachment` 不会产生新版本。这个脚本会先查出既有附件 id，
-> 改为向 `/{id}/data` 提交 —— 这也是它单独存在的原因。
+| `examples/*.py` | 两个可直接运行的生成脚本：基础布局版与带边线布线版 |
 
 ## 疑难排查
 
@@ -245,7 +224,6 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | 两个标签糊在一起 | 同两个节点之间有两条线 | 给其中一条设 `label_pos` / `label_offset` |
 | 边界或说明文字在图片边缘被切掉 | 画布留白不足 | 调大 `drawio_render.py` 里的 `PAD` 常量 |
 | 渲染成功但图标不出现 | AWS4 模板从 CDN 获取 | 检查网络连通性 |
-| Confluence 附件版本不递增 | 同一文件名重复 `POST /child/attachment` | 使用 `confluence_publish.py` |
 | `ValueError: 生成的 XML 已损坏` | 标签或样式中含有会截断 XML 属性的字符。`save()` 在写入前先解析，拒绝输出 | 在错误打印的上下文中找到该字符。标签中的引号已自动处理，因此通常是直接向 `_cells` 追加了原始 XML |
 
 ## 如何选择作图工具

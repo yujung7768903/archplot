@@ -18,7 +18,6 @@ description: 아키텍처·구성도·다이어그램을 그릴 때 쓴다. draw
 | 3. PNG 렌더 | `python3 ~/.claude/skills/archplot/scripts/drawio_render.py <이름>.drawio` | 캔버스 크기 출력 |
 | 4. 눈으로 확인 | Read 툴로 PNG 를 연다 | 겹침·잘림·꼬임은 실행 성공만으로 안 드러난다 |
 | 4-1. 확대 확인 | `python3 ~/.claude/skills/archplot/scripts/drawio_crop.py <이름>.png <x> <y> <w> <h> --zoom 2` | **전체 1장으로 끝내지 않는다.** 축소하면 1.2px 선이 글자 획으로 보여 라벨 관통이 안 드러난다. 그룹 박스 좌상단(라벨)과 긴 캡션 주변을 개별로 확대한다 |
-| 5. 발행 (요청받았을 때만) | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <이름>.png --page <id>` | `md5 일치` 출력 |
 
 어긋나면 생성기의 좌표를 고쳐 2번부터 다시 돈다. PNG 도 `.drawio` 도 손으로 편집하지 않는다 — 정본은 생성기 하나다.
 
@@ -196,7 +195,6 @@ AWS 가 공개한 레퍼런스 아키텍처 도면 4장을 대조해 정한 것�
 | `글자를 지난다` 경고 | 세로선 열이 그룹 라벨 띠나 다른 노드 캡션과 겹친다 | 그 열을 비운다. 그룹 라벨은 좌상단 고정이라 박스 안 왼쪽 열은 쓸 수 없다 — 회랑을 박스 **밖**으로 빼라 |
 | `RuntimeError: 직교 경로가 없다` | 장애물이 아니라 **방향 규칙 위반**인 경우가 많다 | 위 "경로 형태 허용 규칙" 을 먼저 본다. `sp`/`ep` 를 반대쪽 면으로 바꾸거나 노드를 옮긴다 |
 | 렌더는 됐는데 아이콘만 안 나옴 | AWS4 스텐실을 CDN 에서 받아온다 | 네트워크 확인 |
-| Confluence 첨부 버전이 안 올라감 | 같은 파일명으로 `POST /child/attachment` 재호출 | `confluence_publish.py` 를 쓴다 (내부에서 `/{id}/data` 로 보낸다) |
 | `ValueError: 생성한 XML 이 깨졌다` | 라벨이나 스타일에 XML 속성을 깨는 문자가 들어갔다. `save()` 가 쓰기 전에 파싱해서 막는다 | 에러가 찍어 주는 앞뒤 문맥에서 문제 문자를 찾는다. 라벨의 따옴표는 자동으로 처리되므로, 이 에러가 나면 대개 `_cells` 에 원시 XML 을 직접 넣은 경우다 |
 
 ## 스크립트
@@ -207,7 +205,6 @@ AWS 가 공개한 레퍼런스 아키텍처 도면 4장을 대조해 정한 것�
 | `scripts/drawio_route.py` | 엣지 배선. `Panel`, `beside()`. 연결점·직교 경로·관통 판정을 계산해 웨이포인트로 박는다. `python3 drawio_route.py` 로 자체 점검 |
 | `scripts/drawio_render.py` | `.drawio` → PNG. 헤드리스 Chromium + `vendor/viewer-static.min.js`. `--scale` 기본 2배 |
 | `scripts/drawio_crop.py` | PNG 일부 확대. 라벨 관통 검수용 |
-| `scripts/confluence_publish.py` | PNG 를 페이지에 첨부. 새 페이지 생성도 가능. md5 로 검증 |
 | `vendor/viewer-static.min.js` | draw.io viewer. drawio Desktop·xvfb 불필요 |
 | `examples/basic.py` | 좌표 직접 지정 예시. 돌려서 산출물을 만든다 (저장소에 산출물은 없다) |
 | `examples/routed.py` | 배선 라우터 예시. `Panel` · `step` · `beside` · `sp`/`ep` 차선 |

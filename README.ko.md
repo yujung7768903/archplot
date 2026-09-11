@@ -31,7 +31,6 @@ Chromium 과 함께 번들된 draw.io 뷰어로 PNG 를 렌더한다 — draw.io
   앱도 필요 없다. draw.io Desktop CLI 의 export 모드가 WSL 에서 멈추기 때문에 이렇게 작성했다.
 - **에이전트를 위한 작도 규칙** — `SKILL.md` 에 AWS 레퍼런스 아키텍처 다이어그램 4장을 비교해 도출한
   규칙 집합이 들어 있어, 에이전트가 즉흥적으로 그리지 않고 일관되게 그린다.
-- **선택적인 Confluence 게시** — 렌더한 PNG 를 페이지에 첨부하고 md5 로 검증한다.
 
 ## 시작하기
 
@@ -42,7 +41,6 @@ Chromium 과 함께 번들된 draw.io 뷰어로 PNG 를 렌더한다 — draw.io
 | Python 3 | 표준 라이브러리만 사용. 추가 런타임 의존성 없음 |
 | `pip install diagrams` | 생성기가 읽는 벤더 아이콘 PNG 를 제공 |
 | Chromium | `~/.cache/ms-playwright` 또는 `~/.cache/puppeteer` 에서 자동 탐지, 없으면 시스템의 `chromium` / `chromium-browser` / `google-chrome` |
-| Confluence 게시 (선택) | 환경변수 `CONFLUENCE_SITE`, `CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN` 필요 |
 
 ### 설치
 
@@ -71,7 +69,6 @@ python3 scripts/drawio_route.py    # drawio_route: ok
 | 3. PNG 렌더 | `python3 ~/.claude/skills/archplot/scripts/drawio_render.py <name>.drawio` | 캔버스 크기를 출력 |
 | 4. PNG 보기 | 이미지를 연다 | 겹침·잘림·교차한 엣지는 종료 코드에 나타나지 않는다 |
 | 4-1. 확대 | `python3 ~/.claude/skills/archplot/scripts/drawio_crop.py <name>.png <x> <y> <w> <h> --zoom 2` | 전체 보기 한 번으로는 부족하다 — 축소된 상태에서는 1.2px 선이 글자 획처럼 보이고, 라벨을 관통하는 선은 보이지 않는다. 각 그룹 박스의 좌상단(라벨이 있는 자리)과 긴 캡션 주변을 하나씩 확대한다 |
-| 5. 게시 (선택) | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <name>.png --page <id>` | md5 일치를 출력 |
 
 ## 생성기 작성
 
@@ -221,26 +218,8 @@ AWS 레퍼런스 아키텍처 다이어그램 4장을 비교해 도출했다. �
 | `scripts/drawio_route.py` | 엣지 라우팅. `Panel`, `beside()`. 연결점, orthogonal 경로, 차단 여부를 계산한다. 자체 점검: `python3 drawio_route.py` |
 | `scripts/drawio_render.py` | headless Chromium 과 `vendor/viewer-static.min.js` 로 `.drawio` 를 PNG 로 변환한다. `--scale` 기본값은 2 |
 | `scripts/drawio_crop.py` | 렌더한 PNG 의 일부를 확대해 라벨 관통을 확인한다. 렌더러와 같은 headless Chromium 을 쓴다 — PIL 도 ImageMagick 도 필요 없다 |
-| `scripts/confluence_publish.py` | PNG 를 페이지에 첨부하거나 페이지를 생성한다. md5 로 검증한다 |
 | `vendor/viewer-static.min.js` | draw.io 뷰어. 데스크톱 앱과 `xvfb` 가 필요 없도록 벤더링했다 |
-| `reference/*.png` | 작도 규칙을 도출한 레퍼런스 다이어그램 4장 |
-
-### Confluence 게시
-
-선택 사항이며, 환경변수 `CONFLUENCE_SITE`, `CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN` 으로만
-설정한다.
-
-```bash
-# refresh the attachment on an existing page (the page body is left alone)
-python3 scripts/confluence_publish.py out.png --page <page-id>
-
-# create a page under a parent and attach
-python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --title "Title"
-```
-
-> [!IMPORTANT]
-> 같은 파일명을 `POST /child/attachment` 로 다시 올려도 새 버전이 생기지 않는다. 이 스크립트는 기존
-> 첨부의 id 를 조회해 `/{id}/data` 로 올린다. 별도 도구로 존재하는 이유가 이것이다.
+| `examples/*.py` | 바로 돌려볼 수 있는 생성기 2개. 단순 배치판과 엣지 라우팅판이다 |
 
 ## 문제 해결
 
@@ -252,7 +231,6 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | 라벨 둘이 뭉개짐 | 같은 두 노드 사이에 엣지가 둘 | 한쪽에 `label_pos` / `label_offset` 을 설정한다 |
 | 경계나 캡션이 이미지 가장자리에서 잘림 | 캔버스 여백 부족 | `drawio_render.py` 의 `PAD` 상수를 올린다 |
 | 렌더는 되는데 아이콘이 없음 | AWS4 스텐실을 CDN 에서 가져온다 | 네트워크 접근을 확인한다 |
-| Confluence 첨부 버전이 올라가지 않음 | 같은 파일명을 `POST /child/attachment` 로 다시 올렸다 | `confluence_publish.py` 를 쓴다 |
 | `ValueError: 생성한 XML 이 깨졌다` | 라벨이나 스타일에 XML 속성을 깨는 문자가 들어갔다. `save()` 가 쓰기 전에 파싱해 내보내지 않는다 | 에러가 출력하는 앞뒤 문맥에서 문제 문자를 찾는다. 라벨의 따옴표는 자동으로 처리되므로, 대개 `_cells` 에 원시 XML 을 직접 넣은 경우다 |
 
 ## 다이어그램 도구 고르기

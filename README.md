@@ -36,7 +36,6 @@ shapes are used only for boundary boxes (account, region, VPC, subnet).
 - **Drawing rules for the agent** — `SKILL.md` carries a rule set derived by comparing four
   AWS reference architecture diagrams, so the agent draws consistently instead of
   improvising.
-- **Optional Confluence publishing** — attach the rendered PNG to a page and verify by md5.
 
 ## Getting started
 
@@ -47,7 +46,6 @@ shapes are used only for boundary boxes (account, region, VPC, subnet).
 | Python 3 | Standard library only; no extra runtime dependency |
 | `pip install diagrams` | Supplies the vendor icon PNGs the generator reads |
 | Chromium | Auto-detected from `~/.cache/ms-playwright` or `~/.cache/puppeteer`, else system `chromium` / `chromium-browser` / `google-chrome` |
-| Confluence publishing (optional) | Needs the environment variables `CONFLUENCE_SITE`, `CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN` |
 
 ### Install
 
@@ -77,7 +75,6 @@ re-run from step 2.
 | 3. Render the PNG | `python3 ~/.claude/skills/archplot/scripts/drawio_render.py <name>.drawio` | Prints the canvas size |
 | 4. Look at the PNG | Open the image | Overlap, clipping and crossed edges do not show up in an exit code |
 | 4-1. Zoom in | `python3 ~/.claude/skills/archplot/scripts/drawio_crop.py <name>.png <x> <y> <w> <h> --zoom 2` | One full-size view is not enough — scaled down, a 1.2px line looks like part of a letter stroke and a line running through a label stays invisible. Zoom the top-left of each group box, where the label sits, and the area around long captions, one at a time |
-| 5. Publish (optional) | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <name>.png --page <id>` | Prints an md5 match |
 
 ## Writing a generator
 
@@ -232,27 +229,8 @@ and get their own nodes.
 | `scripts/drawio_route.py` | Edge routing. `Panel`, `beside()`. Computes connection points, orthogonal paths and blocking. Self-check: `python3 drawio_route.py` |
 | `scripts/drawio_render.py` | `.drawio` to PNG via headless Chromium and `vendor/viewer-static.min.js`. `--scale` defaults to 2 |
 | `scripts/drawio_crop.py` | Zooms into part of a rendered PNG, for inspecting label crossings. Uses the same headless Chromium as the renderer — no PIL, no ImageMagick |
-| `scripts/confluence_publish.py` | Attaches the PNG to a page, or creates the page; verifies by md5 |
 | `vendor/viewer-static.min.js` | The draw.io viewer, vendored so no desktop app and no `xvfb` is needed |
-| `reference/*.png` | The four reference diagrams the drawing rules were derived from |
-
-### Publishing to Confluence
-
-Optional, and configured entirely through environment variables — `CONFLUENCE_SITE`,
-`CONFLUENCE_EMAIL`, `CONFLUENCE_API_TOKEN`.
-
-```bash
-# refresh the attachment on an existing page (the page body is left alone)
-python3 scripts/confluence_publish.py out.png --page <page-id>
-
-# create a page under a parent and attach
-python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --title "Title"
-```
-
-> [!IMPORTANT]
-> Re-posting the same filename to `POST /child/attachment` does not create a new version.
-> The script looks up the existing attachment id and posts to `/{id}/data` instead, which
-> is why it exists as a separate tool.
+| `examples/*.py` | Two runnable generators — one plain layout, one with routed edges. Run either to produce a `.drawio` and see the API in use |
 
 ## Troubleshooting
 
@@ -264,7 +242,6 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | Two labels smudged together | Two edges running between the same pair of nodes | Set `label_pos` / `label_offset` on one of them |
 | Boundary or caption clipped at the image edge | Not enough canvas padding | Raise the `PAD` constant in `drawio_render.py` |
 | Renders, but the icons are missing | AWS4 stencils are fetched from a CDN | Check network access |
-| The Confluence attachment version does not increase | Same filename re-posted to `POST /child/attachment` | Use `confluence_publish.py` |
 | `ValueError: the generated XML is malformed` | A label or style contains a character that breaks an XML attribute. `save()` parses the document before writing and refuses to emit it | Find the character in the surrounding context the error prints. Quotes in labels are handled for you, so this usually means raw XML was appended to `_cells` directly |
 
 ## Choosing a diagram tool

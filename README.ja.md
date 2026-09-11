@@ -33,7 +33,6 @@ Chromium と同梱の draw.io viewer で PNG をレンダリングします。dr
   ため、この方式で作られています。
 - **agent 向けの作図ルール** —— `SKILL.md` に、AWS のリファレンスアーキテクチャ図 4 枚を突き
   合わせて定めたルール群があり、agent が場当たりでなく一貫して描けます。
-- **Confluence への公開（任意）** —— レンダリングした PNG をページに添付し、md5 で検証します。
 
 ## はじめかた
 
@@ -44,7 +43,6 @@ Chromium と同梱の draw.io viewer で PNG をレンダリングします。dr
 | Python 3 | 標準ライブラリのみ。追加のランタイム依存はありません |
 | `pip install diagrams` | ジェネレーターが読むベンダーアイコン PNG を提供します |
 | Chromium | `~/.cache/ms-playwright` または `~/.cache/puppeteer` を自動探索し、なければシステムの `chromium` / `chromium-browser` / `google-chrome` |
-| Confluence への公開（任意） | 環境変数 `CONFLUENCE_SITE`、`CONFLUENCE_EMAIL`、`CONFLUENCE_API_TOKEN` が必要です |
 
 ### インストール
 
@@ -73,7 +71,6 @@ python3 scripts/drawio_route.py    # drawio_route: ok
 | 3. PNG をレンダリング | `python3 ~/.claude/skills/archplot/scripts/drawio_render.py <name>.drawio` | キャンバスサイズを出力 |
 | 4. PNG を目で見る | 画像を開く | 重なり・切れ・線のもつれは終了コードには出ません |
 | 4-1. 拡大して見る | `python3 ~/.claude/skills/archplot/scripts/drawio_crop.py <name>.png <x> <y> <w> <h> --zoom 2` | 全体 1 枚では足りません。縮小すると 1.2px の線が文字の画のように見え、ラベルを貫く線が現れません。各グループ枠の左上（ラベルのある位置）と長いキャプションの周辺を、1 か所ずつ拡大します |
-| 5. 公開（任意） | `python3 ~/.claude/skills/archplot/scripts/confluence_publish.py <name>.png --page <id>` | md5 一致を出力 |
 
 ## ジェネレーターを書く
 
@@ -225,27 +222,8 @@ agent はこれに従います。
 | `scripts/drawio_route.py` | エッジ配線。`Panel`、`beside()`。接続点・直交経路・貫通判定を計算します。自己点検: `python3 drawio_route.py` |
 | `scripts/drawio_render.py` | headless Chromium と `vendor/viewer-static.min.js` で `.drawio` を PNG に。`--scale` の既定は 2 |
 | `scripts/drawio_crop.py` | レンダリングした PNG の一部を拡大します。ラベル貫通の点検用。レンダラーと同じ headless Chromium を使い、PIL も ImageMagick も不要です |
-| `scripts/confluence_publish.py` | PNG をページに添付、またはページを作成。md5 で検証します |
 | `vendor/viewer-static.min.js` | 同梱の draw.io viewer。デスクトップアプリも `xvfb` も不要になります |
-| `reference/*.png` | 作図ルールの根拠にしたリファレンス 4 枚 |
-
-### Confluence への公開
-
-任意で、設定はすべて環境変数で行います —— `CONFLUENCE_SITE`、`CONFLUENCE_EMAIL`、
-`CONFLUENCE_API_TOKEN`。
-
-```bash
-# refresh the attachment on an existing page (the page body is left alone)
-python3 scripts/confluence_publish.py out.png --page <page-id>
-
-# create a page under a parent and attach
-python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --title "Title"
-```
-
-> [!IMPORTANT]
-> 同じファイル名で `POST /child/attachment` を再度呼んでも新しいバージョンにはなりません。この
-> スクリプトは既存の添付 id を探し、`/{id}/data` へ送ります。別ツールとして存在する理由がこれ
-> です。
+| `examples/*.py` | そのまま実行できる生成スクリプト 2 本。基本レイアウト版と配線版です |
 
 ## トラブルシューティング
 
@@ -257,7 +235,6 @@ python3 scripts/confluence_publish.py out.png --parent <id> --space <KEY> --titl
 | ラベル 2 つがつぶれて重なる | 同じ 2 ノード間に線が 2 本ある | 片方に `label_pos` / `label_offset` を設定します |
 | 境界やキャプションが画像の端で切れる | キャンバスの余白が足りない | `drawio_render.py` の `PAD` 定数を上げます |
 | レンダリングはできるがアイコンが出ない | AWS4 ステンシルを CDN から取得している | ネットワークを確認します |
-| Confluence の添付バージョンが上がらない | 同じファイル名で `POST /child/attachment` を再送した | `confluence_publish.py` を使います |
 | `ValueError: 生成した XML が壊れている` | ラベルやスタイルに XML 属性を断ち切る文字が含まれている。`save()` は書き出す前に解析し、出力を拒否します | エラーが表示する前後の文脈から該当文字を探します。ラベル内の引用符は自動処理されるため、多くは `_cells` に生の XML を直接追加した場合です |
 
 ## 作図ツールの選び分け
