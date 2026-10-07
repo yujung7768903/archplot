@@ -3,8 +3,11 @@
 [English](README.md) | 한국어 | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
 <p align="center">
-  <img src="docs/order.png" alt="주문 처리 흐름" width="49%">
-  <img src="docs/gateway.png" alt="게이트웨이 인가 흐름" width="49%">
+  <img src="docs/team-agent.png" alt="아키텍처 예시" width="80%">
+</p>
+
+<p align="center">
+  <img src="docs/flow.png" alt="플로우차트 예시">
 </p>
 
 말로 설명하면 클라우드 공식 아이콘이 들어간 아키텍처 다이어그램을 그려 주는 Claude Code 스킬이다.

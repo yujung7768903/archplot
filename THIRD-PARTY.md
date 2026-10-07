@@ -22,9 +22,9 @@ closed network some draw.io shapes render as empty boxes.
 
 This repository contains **no vendor icon files**.
 
-The one exception is the two example diagrams shown at the top of the README
-(`docs/order.png`, `docs/gateway.png`). They are architecture diagrams rendered
-with unmodified AWS icons, which is the use AWS permits; no icon file is
+The one exception is the architecture example at the top of the README
+(`docs/team-agent.png`). It is an architecture diagram rendered with unmodified AWS
+icons and one Azure icon, a use both AWS and Microsoft permit; no icon file is
 included on its own.
 
 At runtime, this skill reads icon images from the `diagrams` package

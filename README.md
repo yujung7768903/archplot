@@ -3,8 +3,11 @@
 [English](README.md) | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
 <p align="center">
-  <img src="docs/order.png" alt="Order processing flow" width="49%">
-  <img src="docs/gateway.png" alt="Gateway authorization flow" width="49%">
+  <img src="docs/team-agent.png" alt="Architecture example" width="80%">
+</p>
+
+<p align="center">
+  <img src="docs/flow.png" alt="Flowchart example">
 </p>
 
 A Claude Code skill that draws architecture diagrams with official cloud icons from a plain

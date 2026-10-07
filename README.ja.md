@@ -3,8 +3,11 @@
 [English](README.md) | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | 日本語
 
 <p align="center">
-  <img src="docs/order.png" alt="注文処理フロー" width="49%">
-  <img src="docs/gateway.png" alt="ゲートウェイ認可フロー" width="49%">
+  <img src="docs/team-agent.png" alt="アーキテクチャ図の例" width="80%">
+</p>
+
+<p align="center">
+  <img src="docs/flow.png" alt="フローチャートの例">
 </p>
 
 言葉で説明するだけで、クラウド公式アイコン入りのアーキテクチャ図を描く Claude Code スキルです。
