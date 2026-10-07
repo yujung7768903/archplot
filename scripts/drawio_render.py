@@ -13,6 +13,9 @@ PAD = 50          # 캔버스 사방 여백. 캡션이 노드 폭을 넘어가�
 HERE = os.path.dirname(os.path.abspath(__file__))
 VIEWER = os.path.join(HERE, "..", "vendor", "viewer-static.min.js")
 CHROME_CANDIDATES = [
+    r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+    r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+    os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
     os.path.expanduser("~/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome"),
     os.path.expanduser("~/.cache/puppeteer/chrome/linux-152.0.7977.42/chrome-linux64/chrome"),
 ]

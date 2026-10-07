@@ -56,7 +56,22 @@ def _assert_wellformed(xml):
             f"문제 지점 앞뒤: ...{near}...") from None
 
 # `diagrams` 패키지의 아이콘 리소스. 경로가 파이썬 버전에 묶이므로 glob 로 찾는다.
-_ICON_ROOTS = sorted(glob.glob(os.path.expanduser(
+def _installed_icon_roots():
+    """설치된 `diagrams` 패키지에서 resources 경로를 직접 찾는다 (OS/venv 무관)."""
+    try:
+        import importlib.util
+        spec = importlib.util.find_spec("diagrams")
+        if spec and spec.origin:
+            root = os.path.join(
+                os.path.dirname(os.path.dirname(spec.origin)), "resources")
+            if os.path.isdir(root):
+                return [root]
+    except Exception:
+        pass
+    return []
+
+
+_ICON_ROOTS = _installed_icon_roots() or sorted(glob.glob(os.path.expanduser(
     "~/.local/lib/python3.*/site-packages/resources"))) or sorted(glob.glob(
     os.path.expanduser("~/.local/share/venvs/*/lib/python3.*/site-packages/resources")))
 
