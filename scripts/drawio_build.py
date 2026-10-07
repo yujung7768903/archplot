@@ -19,8 +19,14 @@
 import base64
 import glob
 import os
+import sys
 import xml.etree.ElementTree as ET
 import xml.sax.saxutils as su
+
+# 생성기·라우터가 찍는 한글 메시지가 Windows 콘솔(cp949)에서 깨지지 않게 한다.
+for _s in (sys.stdout, sys.stderr):
+    if hasattr(_s, "reconfigure"):
+        _s.reconfigure(encoding="utf-8", errors="replace")
 
 
 # 라벨은 전부 XML 속성값(value="...") 자리에 들어간다. saxutils.escape 는 & < > 만

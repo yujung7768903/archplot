@@ -6,8 +6,14 @@ mxGeometry 좌표로 캔버스 크기를 미리 계산하므로 여백이 남지
 
   python3 drawio_render.py in.drawio [-o out.png] [--scale 2]
 """
-import argparse, json, os, re, subprocess, sys, tempfile
+import argparse, json, os, re, shutil, subprocess, sys, tempfile
+from pathlib import Path
 from html import escape as _esc
+
+# Windows 콘솔 기본 인코딩(cp949)으로는 한글 출력이 깨지거나 UnicodeEncodeError 가 난다.
+for _s in (sys.stdout, sys.stderr):
+    if hasattr(_s, "reconfigure"):
+        _s.reconfigure(encoding="utf-8", errors="replace")
 
 PAD = 50          # 캔버스 사방 여백. 캡션이 노드 폭을 넘어가므로 필요하다.
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -26,9 +32,9 @@ def find_chrome():
         if os.path.exists(p):
             return p
     for p in ("chromium", "chromium-browser", "google-chrome"):
-        hit = subprocess.run(["which", p], capture_output=True, text=True)
-        if hit.returncode == 0:
-            return hit.stdout.strip()
+        hit = shutil.which(p)        # Windows 에는 which 명령이 없다
+        if hit:
+            return hit
     # playwright 버전이 바뀌면 위 경로가 어긋난다 — glob 로 재탐색
     import glob
     for pat in ("~/.cache/ms-playwright/chromium-*/chrome-linux*/chrome",
@@ -61,6 +67,8 @@ def canvas_size(xml):
 
 
 def render(src, out, scale=2.0):
+    # Chromium 은 상대 경로를 자기 작업 디렉토리 기준으로 풀어 Windows 에서 쓰기가 거부된다.
+    out = os.path.abspath(out)
     xml = open(src, encoding="utf-8").read()
     w, h = canvas_size(xml)
     cfg = {"nav": False, "resize": True, "toolbar": "", "xml": xml}
@@ -68,18 +76,19 @@ def render(src, out, scale=2.0):
         '<html><head><meta charset="utf-8">'
         '<style>html,body{margin:0;padding:0;background:#fff}</style></head><body>'
         f'<div class="mxgraph" data-mxgraph="{_esc(json.dumps(cfg), quote=True)}"></div>'
-        f'<script src="file://{os.path.abspath(VIEWER)}"></script></body></html>'
+        f'<script src="{Path(VIEWER).resolve().as_uri()}"></script></body></html>'
     )
     with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
         f.write(html)
         page = f.name
     cmd = [find_chrome(), "--headless", "--disable-gpu", "--no-sandbox", "--hide-scrollbars",
            "--virtual-time-budget=10000", f"--force-device-scale-factor={scale}",
-           f"--window-size={w},{h}", f"--screenshot={out}", f"file://{page}"]
-    r = subprocess.run(cmd, capture_output=True, text=True)
+           f"--window-size={w},{h}", f"--screenshot={out}", Path(page).as_uri()]
+    # Chromium 로그에 OS 언어 메시지가 섞인다. 로캘 인코딩(cp949)으로 읽으면 리더 스레드가 죽는다.
+    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     os.unlink(page)
     if not os.path.exists(out):
-        sys.exit(f"렌더 실패\n{r.stderr[-800:]}")
+        sys.exit(f"렌더 실패\n{(r.stderr or '')[-800:]}")
     print(f"{out}  ({w}x{h} @{scale}x)")
 
 
