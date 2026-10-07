@@ -23,7 +23,11 @@ description. You get a `.drawio` file you can open and edit in draw.io, plus a P
 npx skills add yujung7768903/archplot
 ```
 
-Requires Python 3, `pip install diagrams` and Chromium.
+| Requirement | Notes |
+| --- | --- |
+| Python 3 | Standard library only; no extra runtime dependency |
+| `pip install diagrams` | Supplies the vendor icon PNGs the generator reads |
+| Chromium | Auto-detected from `~/.cache/ms-playwright` or `~/.cache/puppeteer`, else system `chromium` / `chromium-browser` / `google-chrome` |
 
 ## Usage
 

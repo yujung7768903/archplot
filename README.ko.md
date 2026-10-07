@@ -23,7 +23,11 @@
 npx skills add yujung7768903/archplot
 ```
 
-Python 3, `pip install diagrams`, Chromium 이 필요하다.
+| 요구사항 | 비고 |
+| --- | --- |
+| Python 3 | 표준 라이브러리만 사용. 추가 런타임 의존성 없음 |
+| `pip install diagrams` | 생성기가 읽는 벤더 아이콘 PNG 를 제공 |
+| Chromium | `~/.cache/ms-playwright` 또는 `~/.cache/puppeteer` 에서 자동 탐지, 없으면 시스템의 `chromium` / `chromium-browser` / `google-chrome` |
 
 ## 사용법
 

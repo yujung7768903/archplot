@@ -23,7 +23,11 @@
 npx skills add yujung7768903/archplot
 ```
 
-需要 Python 3、`pip install diagrams` 和 Chromium。
+| 要求 | 说明 |
+| --- | --- |
+| Python 3 | 仅用标准库，无额外运行时依赖 |
+| `pip install diagrams` | 提供生成器读取的厂商图标 PNG |
+| Chromium | 自动探测 `~/.cache/ms-playwright` 或 `~/.cache/puppeteer`，否则回退到系统的 `chromium` / `chromium-browser` / `google-chrome` |
 
 ## 用法
 

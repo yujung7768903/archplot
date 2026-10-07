@@ -23,7 +23,11 @@ draw.io でそのまま開いて編集できる `.drawio` ファイルと PNG �
 npx skills add yujung7768903/archplot
 ```
 
-Python 3、`pip install diagrams`、Chromium が必要です。
+| 要件 | 備考 |
+| --- | --- |
+| Python 3 | 標準ライブラリのみ。追加のランタイム依存はありません |
+| `pip install diagrams` | ジェネレーターが読むベンダーアイコン PNG を提供します |
+| Chromium | `~/.cache/ms-playwright` または `~/.cache/puppeteer` を自動探索し、なければシステムの `chromium` / `chromium-browser` / `google-chrome` |
 
 ## 使い方
 
