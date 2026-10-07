@@ -22,6 +22,11 @@ closed network some draw.io shapes render as empty boxes.
 
 This repository contains **no vendor icon files**.
 
+The one exception is the two example diagrams shown at the top of the README
+(`docs/order.png`, `docs/gateway.png`). They are architecture diagrams rendered
+with unmodified AWS icons, which is the use AWS permits; no icon file is
+included on its own.
+
 At runtime, this skill reads icon images from the `diagrams` package
 (https://github.com/mingrammer/diagrams) installed in the user's own Python
 environment, and embeds them as base64 data URIs inside the `.drawio` files it

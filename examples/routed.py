@@ -33,7 +33,7 @@ p.group("g_data", "데이터 계정", 496, 380, 240, 200)
 p.step("allow", "권한 있나?", 520, 150, DIAMOND, 190, 58)
 
 # 마름모 옆 아이콘은 beside() 로 세로 중심을 맞춘다. 10px 어긋나면 잔꺾임이 생긴다.
-p.node("client", "담당자", 40, beside(p, "allow"), icon("onprem/client/user"))
+p.node("client", "담당자", 40, beside(p, "allow"), icon("aws/general/user"))
 p.node("gw", "게이트웨이", 260, beside(p, "allow"), icon("aws/network/api-gateway"))
 p.node("judge", "인가 판정", 800, beside(p, "allow"), icon("aws/compute/lambda"))
 
