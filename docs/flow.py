@@ -18,15 +18,12 @@ START = "rounded=1;arcSize=50;whiteSpace=wrap;fillColor=#D5E8D4;strokeColor=#82B
 PROC = "rounded=1;arcSize=8;whiteSpace=wrap;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=12;"
 DEC = "rhombus;whiteSpace=wrap;fillColor=#FFE6CC;strokeColor=#D79B00;fontSize=12;"
 END = "rounded=1;arcSize=50;whiteSpace=wrap;fillColor=#F8CECC;strokeColor=#B85450;fontSize=12;"
-TITLE = ("text;html=0;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;"
-         "fontSize=18;fontStyle=1;fontColor=#232F3E;")
 
 CY, CY2 = 150, 320          # 주 흐름 · 분기 줄의 세로 중심
 PH, DH = 60, 100            # 칸 · 마름모 높이
 
 d = Diagram("메시지 처리 흐름")
 p = Panel(d, "f", 0, 0)
-p.node("title", "Teams Q&A 봇 — 메시지 처리 흐름", 40, 0, TITLE, w=600, h=40)
 
 
 def box(cid, label, x, w, style=PROC, cy=CY):

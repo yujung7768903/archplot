@@ -2,9 +2,13 @@
 
 [English](README.md) | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | 日本語
 
+### アーキテクチャ図の例
+
 <p align="center">
   <img src="docs/team-agent.png" alt="アーキテクチャ図の例" width="80%">
 </p>
+
+### フローチャートの例
 
 <p align="center">
   <img src="docs/flow.png" alt="フローチャートの例">

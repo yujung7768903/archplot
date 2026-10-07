@@ -2,9 +2,13 @@
 
 [English](README.md) | [한국어](README.ko.md) | 简体中文 | [日本語](README.ja.md)
 
+### 架构图示例
+
 <p align="center">
   <img src="docs/team-agent.png" alt="架构图示例" width="80%">
 </p>
+
+### 流程图示例
 
 <p align="center">
   <img src="docs/flow.png" alt="流程图示例">

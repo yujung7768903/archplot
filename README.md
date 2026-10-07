@@ -2,9 +2,13 @@
 
 [English](README.md) | [한국어](README.ko.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
+### Architecture example
+
 <p align="center">
   <img src="docs/team-agent.png" alt="Architecture example" width="80%">
 </p>
+
+### Flowchart example
 
 <p align="center">
   <img src="docs/flow.png" alt="Flowchart example">

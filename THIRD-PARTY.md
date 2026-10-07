@@ -24,8 +24,9 @@ This repository contains **no vendor icon files**.
 
 The one exception is the architecture example at the top of the README
 (`docs/team-agent.png`). It is an architecture diagram rendered with unmodified AWS
-icons and one Azure icon, a use both AWS and Microsoft permit; no icon file is
-included on its own.
+and Azure icons, a use both AWS and Microsoft permit, plus the Microsoft Teams logo,
+shown only to name the product the bot connects to. No icon file is included on
+its own.
 
 At runtime, this skill reads icon images from the `diagrams` package
 (https://github.com/mingrammer/diagrams) installed in the user's own Python

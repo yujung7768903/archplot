@@ -2,9 +2,13 @@
 
 [English](README.md) | 한국어 | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
+### 아키텍처 예시
+
 <p align="center">
   <img src="docs/team-agent.png" alt="아키텍처 예시" width="80%">
 </p>
+
+### 플로우차트 예시
 
 <p align="center">
   <img src="docs/flow.png" alt="플로우차트 예시">
